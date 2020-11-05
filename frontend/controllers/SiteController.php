@@ -1,8 +1,13 @@
 <?php
+
 namespace frontend\controllers;
 
+use core\entities\Chat;
+use core\forms\ChatForm;
 use core\forms\user\ResendVerificationEmailForm;
 use core\forms\user\VerifyEmailForm;
+use core\services\ChatService;
+use core\services\UserService;
 use Yii;
 use yii\base\InvalidArgumentException;
 use yii\web\BadRequestHttpException;
@@ -20,6 +25,16 @@ use core\forms\ContactForm;
  */
 class SiteController extends Controller
 {
+    private UserService  $userService;
+    private ChatService  $chatService;
+
+    public function __construct($id, $module, UserService $userService, ChatService $chatService, $config = [])
+    {
+        $this->userService = $userService;
+        $this->chatService = $chatService;
+        parent::__construct($id, $module, $config);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -74,7 +89,24 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $messages = Chat::find()->with('user.role')->all();
+        $form = new ChatForm();
+        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
+            if (Yii::$app->user->isGuest) {
+                Yii::$app->session->setFlash('error', 'unauthorized user');
+            } else {
+                try {
+                    $this->chatService->create($form, Yii::$app->user->id);
+                    return $this->redirect(['index']);
+                } catch (\Exception $e) {
+                    Yii::$app->session->setFlash('error', $e->getMessage());
+                }
+            }
+        }
+        return $this->render('index', [
+            'model' => $form,
+            'messages' => $messages
+        ]);
     }
 
     /**
@@ -152,14 +184,18 @@ class SiteController extends Controller
      */
     public function actionSignup()
     {
-        $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post()) && $model->signup()) {
-            Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
-            return $this->goHome();
+        $form = new SignupForm();
+        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
+            try {
+                $this->userService->signup($form);
+                Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
+                return $this->goHome();
+            } catch (\Exception $e) {
+                Yii::$app->session->setFlash('error', $e->getMessage());
+            }
         }
-
         return $this->render('signup', [
-            'model' => $model,
+            'model' => $form,
         ]);
     }
 
@@ -216,8 +252,8 @@ class SiteController extends Controller
      * Verify email address
      *
      * @param string $token
-     * @throws BadRequestHttpException
      * @return yii\web\Response
+     * @throws BadRequestHttpException
      */
     public function actionVerifyEmail($token)
     {

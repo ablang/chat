@@ -4,7 +4,9 @@
 namespace core\entities;
 
 
+use core\queries\ChatQuery;
 use yii\base\Model;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
@@ -16,6 +18,8 @@ use yii\db\ActiveRecord;
  * @property integer $id
  * @property integer $userId
  * @property boolean $hidden
+ *
+ * @property User $user
  */
 class Chat extends ActiveRecord
 {
@@ -33,6 +37,11 @@ class Chat extends ActiveRecord
         return $item;
     }
 
+    public function isHidden()
+    {
+        return (int)$this->hidden == 1;
+    }
+
     public function hide()
     {
         $this->hidden = true;
@@ -41,5 +50,15 @@ class Chat extends ActiveRecord
     public function show()
     {
         $this->hidden = false;
+    }
+
+    public function getUser(): ActiveQuery
+    {
+        return $this->hasOne(User::class, ['id' => 'userId']);
+    }
+
+    public static function find(): ChatQuery
+    {
+        return new ChatQuery(static::class);
     }
 }

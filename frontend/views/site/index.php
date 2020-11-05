@@ -1,53 +1,39 @@
 <?php
 
-/* @var $this yii\web\View */
+/* @var $this yii\web\View
+ *
+ * @var $model core\forms\ChatForm
+ * @var $messages Chat[]
+ */
 
-$this->title = 'My Yii Application';
+use core\entities\Chat;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+
+$this->title = 'Chat';
 ?>
-<div class="site-index">
 
-    <div class="jumbotron">
-        <h1>Congratulations!</h1>
-
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
-    </div>
-
-    <div class="body-content">
-
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
-            </div>
+<div class="container">
+    <div class="chat-panel panel panel-default">
+        <div class="panel-heading">Chat</div>
+        <div class="panel-body" style="height: 500px; overflow: auto;">
+            <?php foreach ($messages as $message):
+                $class = $message->user->isAdmin() ? 'text-danger' : 'text-muted';
+                ?>
+                <p>
+                    <span class="label label-default"><?= Yii::$app->formatter->asDate($message->createdAt, 'php:d.m.Y h:i:s'); ?></span>
+                    <b class="<?= $class ?>"><?= Html::encode($message->user->username) ?>:</b>
+                    <?= Html::encode($message->message) ?>
+                </p>
+            <?php endforeach; ?>
         </div>
-
+        <?php if (!Yii::$app->user->isGuest) : ?>
+            <div class="panel-footer">
+                <?php $form = ActiveForm::begin(); ?>
+                <?= $form->field($model, 'message')->textarea(['rows' => '3', 'placeholder' => 'Your message...'])->label(false) ?>
+                <?= Html::submitButton('Send', ['class' => 'btn btn-success']) ?>
+                <?php ActiveForm::end(); ?>
+            </div>
+        <?php endif; ?>
     </div>
 </div>

@@ -61,7 +61,7 @@ return [
         'rules' => [
             [
                 'allow' => true,
-                'roles' => ['admin'],
+                'roles' => ['@'],
             ],
         ],
     ],
