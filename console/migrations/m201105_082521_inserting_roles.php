@@ -19,7 +19,7 @@ class m201105_082521_inserting_roles extends Migration
         $this->batchInsert('{{%auth_item_children}}', ['parent', 'child'], [
             ['admin', 'user'],
         ]);
-        $this->execute('INSERT INTO {{%auth_assignments}} (item_name, user_id) SELECT \'user\', u.id FROM {{%users}} u ORDER BY u.id');
+        $this->execute('INSERT INTO {{%auth_assignments}} (item_name, user_id) SELECT \'user\', u.id FROM {{%user}} u ORDER BY u.id');
     }
 
     /**

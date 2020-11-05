@@ -14,7 +14,7 @@ class m201105_082317_change_auth_assignments_table extends Migration
     {
         $this->alterColumn('{{%auth_assignments}}', 'user_id', $this->integer()->notNull());
         $this->createIndex('{{%idx-auth_assignments-user_id}}', '{{%auth_assignments}}', 'user_id');
-        $this->addForeignKey('{{%fk-auth_assignments-user_id}}', '{{%auth_assignments}}', 'user_id', '{{%users}}', 'id', 'CASCADE');
+        $this->addForeignKey('{{%fk-auth_assignments-user_id}}', '{{%auth_assignments}}', 'user_id', '{{%user}}', 'id', 'CASCADE');
     }
 
     /**
