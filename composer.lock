@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "664ff1f344a8e1c57df318c512f87cf7",
+    "content-hash": "c793f94e7f099c249644b6af6860a4e6",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -363,6 +363,47 @@
                 "source": "https://github.com/ezyang/htmlpurifier/tree/master"
             },
             "time": "2020-06-29T00:56:53+00:00"
+        },
+        {
+            "name": "fishvision/yii2-migrate",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:fishvision/yii2-migrate.git",
+                "reference": "9bf914bcbac5e71318079a50597e5d29bc42ac5a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fishvision/yii2-migrate/zipball/9bf914bcbac5e71318079a50597e5d29bc42ac5a",
+                "reference": "9bf914bcbac5e71318079a50597e5d29bc42ac5a",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "default-branch": true,
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "fishvision\\migrate\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alex Berriman",
+                    "email": "alexb@fishvision.com"
+                }
+            ],
+            "description": "Extended migration support",
+            "keywords": [
+                "extension",
+                "yii2"
+            ],
+            "time": "2017-06-08T01:59:47+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
