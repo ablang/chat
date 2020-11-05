@@ -1,6 +1,7 @@
 <?php
-namespace common\models;
+namespace core\forms\user;
 
+use core\entities\User;
 use Yii;
 use yii\base\Model;
 
